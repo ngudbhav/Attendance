@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const db = require('../db.js');
+const pool = require('../db.js');
 const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Kolkata');
@@ -17,28 +17,36 @@ router.post('/markAttendance', (req, res, next) => {
   let time = req.body.time
   //Allow Attendance Mark before 9:30 AM everyday 
   if (time <= threshold && time >= minimum){
-    db.query(`Select id, status from 9s where Name like ?`, `%${name}%`, (error, results) => {
+    pool.getConnection(function (error, db) {
       if (error) throw error;
-      else {
-        if (results.length) {
-          let attendanceStatus = results[0].status;
-
-          //Already attendance marked
-          if (attendanceStatus) {
-            res.send('Your Attendance is already marked!');
-          }
+      else{
+        db.query(`Select id, status from 9s where Name like ?`, `%${name}%`, (error, results) => {
+          if (error) throw error;
           else {
-            db.query('update 9s set status = 1, time = ? where id = ?', [time, results[0].id], (error, results) => {
-              if (error) throw error;
-              else {
-                res.send('Attendance Successfully marked!');
+            if (results.length) {
+              let attendanceStatus = results[0].status;
+
+              //Already attendance marked
+              if (attendanceStatus) {
+                res.send('Your Attendance is already marked!');
+                db.release();
               }
-            });
+              else {
+                db.query('update 9s set status = 1, time = ? where id = ?', [time, results[0].id], (error, results) => {
+                  if (error) throw error;
+                  else {
+                    res.send('Attendance Successfully marked!');
+                    db.release();
+                  }
+                });
+              }
+            }
+            else {
+              res.send('No Student found with the name. Make sure you typed the name as per the school records!');
+              db.release();
+            }
           }
-        }
-        else {
-          res.send('No Student found with the name. Make sure you typed the name as per the school records!');
-        }
+        });
       }
     });
   }

@@ -1,6 +1,6 @@
 let mysql = require('mysql');
 
-let connection = mysql.createConnection(
+let connection = mysql.createPool(
     {
         host: 'us-cdbr-iron-east-01.cleardb.net',
         user: 'b0f0922903b95b',
@@ -9,7 +9,7 @@ let connection = mysql.createConnection(
     }
 );
 
-connection.connect();
+//connection.connect();
 console.log('Database Connected!');
 
 module.exports = connection;
