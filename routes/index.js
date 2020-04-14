@@ -9,7 +9,7 @@ let minimum = new Date(moment().hours(9).minutes(0).seconds(0)._d).toISOString()
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index');
 });
 
 router.post('/markAttendance', (req, res, next) => {
