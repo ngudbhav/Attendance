@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <mate charest="utf-8" />
+    <title>Hello world!</title>
+</head>
+
+<body>
+    <h1>User List</h1>
+    <ul>
+        {{#each users}}
+        <li>Roll number: {{this.id}}</li>
+        <li>Name: {{this.Name}}</li>
+        <li>Time: {{this.time}}</li>
+        <li>Marked: {{this.status}}</li>
+        <br>
+        {{/each}}
+    </ul>
+</body>
+
+</html>
