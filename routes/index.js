@@ -46,11 +46,11 @@ router.get('/output', (req, res, next) => {
             data: {
               users: results
             },
-            path: "../output.pdf"
+            path: "output.pdf"
           };
           pdf.create(document, options)
             .then(resi => {
-              res.download('../output.pdf');
+              res.download('output.pdf');
             })
             .catch(error => {
               console.error(error)
