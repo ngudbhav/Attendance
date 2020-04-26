@@ -43,26 +43,8 @@ var job = new CronJob(
         to: 'whatsapp:+917014878106'
       }).then((message) => {
         console.log(message.sid);
-        pool.getConnection(function (error, db) {
-          if (error) throw error;
-          else {
-            db.query('update 9s set time = NULL, status = 0', (error, results) => {
-              if (error) throw error;
-            });
-            db.release();
-          }
-        });
       }).catch((error) => {
         console.log(error);
-        pool.getConnection(function (error, db) {
-          if (error) throw error;
-          else {
-            db.query('update 9s set time = NULL, status = 0', (error, results) => {
-              if (error) throw error;
-            });
-            db.release();
-          }
-        });
         throw error;
       });
   },

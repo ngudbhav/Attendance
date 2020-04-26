@@ -40,7 +40,6 @@ router.get('/output', (req, res, next) => {
       db.query('Select * from 9s where status = 1', (error, results) => {
         if (error) throw error;
         else {
-          db.release();
           var document = {
             html: html,
             data: {
@@ -51,9 +50,21 @@ router.get('/output', (req, res, next) => {
           pdf.create(document, options)
             .then(resi => {
               res.download('output.pdf');
+              db.query('update 9s set time = NULL, status = 0', (error, results) => {
+                if (error) throw error;
+                else{
+                  db.release();
+                }
+              });
             })
             .catch(error => {
               console.error(error)
+              db.query('update 9s set time = NULL, status = 0', (error, results) => {
+                if (error) throw error;
+                else {
+                  db.release();
+                }
+              });
             });
         }
       });
